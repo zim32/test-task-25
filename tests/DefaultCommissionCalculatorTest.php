@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Zim32\TestTask\Contract\BinCountryResolverInterface;
 use Zim32\TestTask\Contract\CurrencyConverterInterface;
 use Zim32\TestTask\Dto\TransactionDto;
+use Zim32\TestTask\Exception\NegativeNumberException;
 use Zim32\TestTask\Service\DefaultCommissionCalculator;
 
 class DefaultCommissionCalculatorTest extends \PHPUnit\Framework\TestCase
@@ -104,10 +105,13 @@ class DefaultCommissionCalculatorTest extends \PHPUnit\Framework\TestCase
 
         $calculator = new DefaultCommissionCalculator($binDataProvider, $currencyConverter);
 
-        $this->expectExceptionMessage('Can not calculate commission: transaction amount < 0');
-
-        $calculator->calculate(
-            new TransactionDto(bin: '1234123', amount: -10.0, currency: 'EUR' )
-        );
+        try {
+            $calculator->calculate(
+                new TransactionDto(bin: '1234123', amount: -10.0, currency: 'EUR' )
+            );
+            $this->fail('Exception is not thrown');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(NegativeNumberException::class, $e);
+        }
     }
 }

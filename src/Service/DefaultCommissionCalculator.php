@@ -8,6 +8,7 @@ use Zim32\TestTask\Contract\BinCountryResolverInterface;
 use Zim32\TestTask\Contract\CommissionCalculatorInterface;
 use Zim32\TestTask\Contract\CurrencyConverterInterface;
 use Zim32\TestTask\Dto\TransactionDto;
+use Zim32\TestTask\Exception\NegativeNumberException;
 use Zim32\TestTask\Helper\EuDetector;
 
 class DefaultCommissionCalculator implements CommissionCalculatorInterface
@@ -29,7 +30,7 @@ class DefaultCommissionCalculator implements CommissionCalculatorInterface
         }
 
         if ($transaction->amount < 0) {
-            throw new \Exception('Can not calculate commission: transaction amount < 0');
+            throw new NegativeNumberException($transaction->amount);
         }
 
         // detect country code from bin number
