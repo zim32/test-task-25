@@ -6,6 +6,7 @@ namespace Zim32\TestTask\Service;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Zim32\TestTask\Contract\ExchangeRatesProviderInterface;
+use Zim32\TestTask\Exception\UnsupportedCurrencyCodeException;
 
 class DefaultExchangeRatesProvider implements ExchangeRatesProviderInterface
 {
@@ -21,7 +22,7 @@ class DefaultExchangeRatesProvider implements ExchangeRatesProviderInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws UnsupportedCurrencyCodeException
      */
     public function getRate(string $baseCurrency, string $to): float
     {
@@ -29,13 +30,13 @@ class DefaultExchangeRatesProvider implements ExchangeRatesProviderInterface
         $to = strtoupper($to);
 
         if ($baseCurrency !== 'EUR') {
-            throw new \Exception('Only EUR is supported as base currency for exchange rates');
+            throw new UnsupportedCurrencyCodeException($baseCurrency);
         }
 
         $this->loadRatesIfNeeded();
 
         if (false === array_key_exists($to, $this->cache)) {
-            throw new \Exception(sprintf('No exchange rate exists for %s currency', $to));
+            throw new UnsupportedCurrencyCodeException($to);
         }
 
         return $this->cache[$to];

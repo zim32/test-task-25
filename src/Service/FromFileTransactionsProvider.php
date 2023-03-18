@@ -11,6 +11,9 @@ class FromFileTransactionsProvider implements TransactionsProviderInterface
     {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getTransactions(): \Generator
     {
         if (!file_exists($this->filePath) || !is_readable($this->filePath)) {

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Zim32\TestTask\Exception\NegativeNumberException;
 use Zim32\TestTask\Service\DefaultCurrencyConverter;
 use Zim32\TestTask\Service\TestExchangeRatesProvider;
 
@@ -25,8 +26,12 @@ class DefaultCurrencyConverterTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(0.0, $converter->convert(0, 'UAH', 'EUR'));
 
         // check that exception is thrown if negative number is passed
-        $this->expectException(\Exception::class);
-        $converter->convert(-10, 'UAH', 'EUR');
+        try {
+            $converter->convert(-10, 'UAH', 'EUR');
+            $this->fail("Exception is not thrown");
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(NegativeNumberException::class, $e);
+        }
     }
 
 }

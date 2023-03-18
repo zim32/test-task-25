@@ -6,6 +6,7 @@ namespace Zim32\TestTask\Service;
 
 use Zim32\TestTask\Contract\CurrencyConverterInterface;
 use Zim32\TestTask\Contract\ExchangeRatesProviderInterface;
+use Zim32\TestTask\Exception\NegativeNumberException;
 
 class DefaultCurrencyConverter implements CurrencyConverterInterface
 {
@@ -15,10 +16,13 @@ class DefaultCurrencyConverter implements CurrencyConverterInterface
     {
     }
 
+    /**
+     * @throws NegativeNumberException
+     */
     public function convert(float $amount, string $from, string $to): float
     {
         if ($amount < 0) {
-            throw new \Exception('Can not convert currency: amount is < 0');
+            throw new NegativeNumberException($amount);
         }
 
         $from = strtoupper($from);

@@ -6,6 +6,9 @@ use Zim32\TestTask\Contract\BinCountryResolverInterface;
 
 class DefaultBinCountryResolver implements BinCountryResolverInterface
 {
+    /**
+     * @throws \Exception
+     */
     public function getCountryCodeByBinNumber(string $bin): string|null
     {
         $context = [
